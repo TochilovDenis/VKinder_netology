@@ -56,8 +56,6 @@ class FavoriteUser(Base):
     vk_user_id = sql.Column(sql.Integer,
                             unique=True,
                             nullable=False)
-    vk_user_first_name = sql.Column(sql.String)
-    vk_user_last_name = sql.Column(sql.String)
     vk_user_url = sql.Column(sql.String)
 
     bot_user_vk_id = sql.Column(sql.Integer,
@@ -67,9 +65,7 @@ class FavoriteUser(Base):
                                 )
 
     def __repr__(self):
-        return f'{self.vk_user_first_name} ' \
-               f'{self.vk_user_last_name} ' \
-               f'{self.vk_user_url}'
+        return f'{self.vk_user_url}'
 
 
 class BlackList(Base):
@@ -85,8 +81,6 @@ class BlackList(Base):
     vk_user_id = sql.Column(sql.Integer,
                             unique=True,
                             nullable=False)
-    vk_user_first_name = sql.Column(sql.String)
-    vk_user_last_name = sql.Column(sql.String)
     vk_user_url = sql.Column(sql.String)
 
     bot_user_vk_id = sql.Column(sql.Integer,
@@ -96,9 +90,7 @@ class BlackList(Base):
                                 )
 
     def __repr__(self):
-        return f'{self.vk_user_first_name} ' \
-               f'{self.vk_user_last_name} ' \
-               f'{self.vk_user_url}'
+        return f'{self.vk_user_url}'
 
 
 class VkUserPhoto(Base):
@@ -148,21 +140,17 @@ def add_new_match_to_favorites(*args):
     """
     Добавляет пользователя в Избранное
     vk_user_id: int
-    first_name: str
-    last_name: str
     vk_user_url: str
     bot_user_vk_id: int
     :return: Boolean
     """
-    vk_user_id, bot_user_vk_id, first_name, last_name, vk_user_url = args
+    vk_user_id, bot_user_vk_id, vk_user_url = args
 
     if check_if_match_exists(vk_user_id)[0] is not None:
         return False
 
     new_entry = FavoriteUser(
         vk_user_id=vk_user_id,
-        vk_user_first_name=first_name,
-        vk_user_last_name=last_name,
         vk_user_url=vk_user_url,
         bot_user_vk_id=bot_user_vk_id
     )
@@ -177,21 +165,17 @@ def add_new_match_to_black_list(*args):
     """
     Добавляет пользователя в Черный список
     vk_user_id: int
-    first_name: str
-    last_name: str
     vk_user_url: str
     bot_user_vk_id: int
     :return: Boolean
     """
-    vk_user_id, bot_user_vk_id, first_name, last_name, vk_user_url = args
+    vk_user_id, bot_user_vk_id, vk_user_url = args
 
     if check_if_match_exists(vk_user_id)[1] is not None:
         return False
 
     new_entry = BlackList(
         vk_user_id=vk_user_id,
-        vk_user_first_name=first_name,
-        vk_user_last_name=last_name,
         vk_user_url=vk_user_url,
         bot_user_vk_id=bot_user_vk_id
     )
@@ -272,8 +256,6 @@ def show_all_favorites(vk_user_id):
     """
     all_favorites = session.\
         query(
-              FavoriteUser.vk_user_first_name,
-              FavoriteUser.vk_user_last_name,
               FavoriteUser.vk_user_url,
               VkUserPhoto.photo_name
              )\
@@ -294,8 +276,6 @@ def show_all_blacklisted(vk_user_id):
     """
     all_blacklisted = session.\
         query(
-              BlackList.vk_user_first_name,
-              BlackList.vk_user_last_name,
               BlackList.vk_user_url,
               VkUserPhoto.photo_name)\
         .join(
