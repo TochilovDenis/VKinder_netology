@@ -59,8 +59,7 @@ def main():
             vk_models.add_new_match_to_black_list(
                 vk_user_id,
                 bot_user_id,
-                first_name,
-                last_name, url
+                url
             )
             vk_models.add_photo_of_the_match(
                 user_attachment,
