@@ -27,7 +27,7 @@ def main():
         :return: Boolean
         """
 
-        first_name, last_name, url, user_attachment = stack.pop()
+        url, user_attachment = stack.pop()
         vk_user_id = int(url.split('id')[1])
 
         if flag_list and vk_models.check_if_match_exists(vk_user_id)[0] is None:
@@ -35,8 +35,7 @@ def main():
             vk_models.add_new_match_to_favorites(
                 vk_user_id,
                 bot_user_id,
-                first_name,
-                last_name, url
+                url
             )
             vk_models.add_photo_of_the_match(
                 user_attachment,
@@ -152,10 +151,10 @@ def main():
                 elif message == "поиск":
                     # читаем данные пользователя из словаря,
                     # созданного при старте бота
-                    city = bot_profile_info.get('city')
                     sex = bot_profile_info.get('sex')
                     bdate = bot_profile_info.get('bdate')
                     relation = bot_profile_info.get('relation')
+                    city = bot_profile_info.get('city')
 
                     # поиск людей в соответствии с данными
                     # пользователя бота
