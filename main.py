@@ -160,7 +160,7 @@ def main():
 
                     # поиск людей в соответствии с данными
                     # пользователя бота
-                    data = vk_api.search_users(city, sex, bdate, relation)
+                    data = vk_api.search_users(sex, bdate, relation, city)
 
                     if data:
                         stack.append(data)
