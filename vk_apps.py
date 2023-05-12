@@ -59,15 +59,17 @@ class VKTools:
             if not name:                        # если нет имена, то ищем фамилию
                 name = data.get('last_name')
 
+            # Пол (выбираем противоположный)
+            sex = (1, 2)[data.get('sex') == 1]
+
             # Дата рождения
             bdate = data.get('bdate')
             if len(bdate) > 6:
                 bdate = int(bdate[-4:])
             else:
                 bdate = None
-
-            # Пол (выбираем противоположный)
-            sex = (1, 2)[data.get('sex') == 2]
+            # Семейное положение
+            relation = data.get('relation')
 
             # Город
             if data.get('city'):
@@ -75,12 +77,9 @@ class VKTools:
             else:
                 city = None
 
-            # Семейное положение
-            relation = data.get('relation')
-
             return name, sex, bdate, relation, city
 
-    def search_users(self, city, sex, bdate, relation, count=30):
+    def search_users(self, sex, bdate, relation, city, count=30):
         """
         Информация о поиске пользователя Вконтакте.
         Посылает API запрос, используя VK API метод users.search,
