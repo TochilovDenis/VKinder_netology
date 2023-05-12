@@ -88,13 +88,13 @@ def main():
 
                     # запросить всю информацию от пользователя бота
                     res = vk_api.get_profile_info(event.user_id)
-                    name_bot_user, city, sex, bdate, relation = res
+                    name_bot_user, sex, bdate, relation, city = res
 
                     # заполняем словарь для поиска
-                    bot_profile_info['city'] = city
                     bot_profile_info['sex'] = sex
-                    bot_profile_info['relation'] = relation
                     bot_profile_info['bdate'] = bdate
+                    bot_profile_info['relation'] = relation
+                    bot_profile_info['city'] = city
 
                     vkbot.message_send(event.user_id, f'Привет, {name_bot_user}!\n'
                                                       f'Наберите "help"')
