@@ -79,7 +79,7 @@ class VKTools:
 
             return name, sex, bdate, relation, city
 
-    def search_users(self, sex, bdate, relation, city, count=30):
+    def search_users(self, sex, bdate, relation, city, count=10):
         """
         Информация о поиске пользователя Вконтакте.
         Посылает API запрос, используя VK API метод users.search,
@@ -95,12 +95,12 @@ class VKTools:
         session = Session()
 
         params = {
-            'count': count,
             'sex': sex,
             'bdate': bdate,
-            'has_photo': 1,
             'hometown': city,
             'relation': relation,
+            'count': count,
+            'has_photo': 1,
             'offset': self.offset
         }
 
@@ -137,8 +137,7 @@ class VKTools:
 
             photo_profile = self.get_photos(row['id'])
 
-            return row['first_name'], row['last_name'], \
-                f'{vk_config.base_profile_url}{row["id"]}', \
+            return f'{vk_config.base_profile_url}{row["id"]}', \
                 photo_profile
 
     def get_photos(self, user_id):
