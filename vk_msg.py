@@ -15,7 +15,7 @@ def vk_message():
         :return: Boolean
         """
 
-        first_name, last_name, url, user_attachment = stack.pop()
+        url, user_attachment = stack.pop()
         vk_user_id = int(url.split('id')[1])
 
         if flag_list and vk_models.check_if_match_exists(vk_user_id)[0] is None:
@@ -131,11 +131,11 @@ def vk_message():
                               f'пользователь id{event.user_id} '
                               f'результат поиска: {data}')
 
-                        msg = f'{data[0]} {data[1]}\n{data[2]}'
+                        msg = f'{data[0]}'
 
                         vkbot.message_send(event.user_id,
                                            message=msg,
-                                           attachment=data[3])
+                                           attachment=data[1])
 
                     elif not data:
                         # если данных нет (пришел пустой список)
