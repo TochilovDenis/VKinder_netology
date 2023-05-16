@@ -1,5 +1,6 @@
 import vk_apps
 import vk_interface
+import vk_msg
 from datetime import datetime as dt
 
 vk_api = vk_apps.VKTools()
