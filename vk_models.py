@@ -93,26 +93,6 @@ class BlackList(Base):
         return f'{self.vk_user_url}'
 
 
-class VkUserPhoto(Base):
-    """
-    Таблица vk_user_photo - фото профиля
-    """
-    __tablename__ = 'vk_user_photo'
-    id_photo = sql.Column(sql.Integer,
-                          primary_key=True,
-                          autoincrement=True,
-                          nullable=False)
-
-    photo_name = sql.Column(sql.String, nullable=False)
-    vk_user_id = sql.Column(sql.Integer, nullable=False)
-    bot_user_vk_id = sql.Column(sql.Integer, nullable=False)
-
-    def __repr__(self):
-        return f'{self.id_photo} ' \
-               f'{self.photo_name} ' \
-               f'{self.vk_user_id}'
-
-
 # Функции для работы с БД
 def add_bot_user(id_vk):
     """
@@ -209,11 +189,6 @@ def delete_match_from_favorites_list(vk_id):
         .filter_by(bot_user_vk_id=vk_id)\
         .delete(synchronize_session='fetch')
 
-    session.\
-        query(VkUserPhoto)\
-        .filter_by(bot_user_vk_id=vk_id)\
-        .delete(synchronize_session='fetch')
-
     session.commit()
 
 
@@ -230,24 +205,6 @@ def check_if_match_exists(id_vk):
     return favorite_list, black_list
 
 
-def add_photo_of_the_match(*args):
-    """
-    Добавляет фото в таблицу vk_user_photo
-    photo_name: str
-    vk_user_id: int
-    :return: Boolean
-    """
-    photo_name, vk_user_id, bot_user_vk_id = args
-    new_entry = VkUserPhoto(
-        photo_name=photo_name,
-        vk_user_id=vk_user_id,
-        bot_user_vk_id=bot_user_vk_id
-    )
-    session.add(new_entry)
-    session.commit()
-    return True
-
-
 def show_all_favorites(vk_user_id):
     """
     Выводит избранное текущему пользователя бота
@@ -255,15 +212,8 @@ def show_all_favorites(vk_user_id):
     :return: all_favorites: list
     """
     all_favorites = session.\
-        query(
-              FavoriteUser.vk_user_url,
-              VkUserPhoto.photo_name
-             )\
-        .join(
-              VkUserPhoto,
-              VkUserPhoto.vk_user_id == FavoriteUser.vk_user_id
-        ).filter(
-              vk_user_id == FavoriteUser.bot_user_vk_id).all()
+        query(FavoriteUser.vk_user_url)\
+        .filter(vk_user_id == FavoriteUser.bot_user_vk_id).all()
 
     return all_favorites
 
@@ -275,15 +225,8 @@ def show_all_blacklisted(vk_user_id):
     :return all_blacklisted: list
     """
     all_blacklisted = session.\
-        query(
-              BlackList.vk_user_url,
-              VkUserPhoto.photo_name)\
-        .join(
-              VkUserPhoto,
-              VkUserPhoto.vk_user_id == BlackList.vk_user_id
-             )\
-        .filter(
-              BlackList.bot_user_vk_id == vk_user_id).all()
+        query(BlackList.vk_user_url)\
+        .filter(BlackList.bot_user_vk_id == vk_user_id).all()
 
     return all_blacklisted
 
